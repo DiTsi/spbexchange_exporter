@@ -4,12 +4,15 @@ import os
 from time import sleep
 from urllib import request
 from bs4 import BeautifulSoup
-from prometheus_client import start_http_server, Gauge, Summary
+from prometheus_client import start_http_server, Gauge
 
 
 url = 'http://spbexchange.com/en/market_data/'
 table_cols = 11
-UPDATE_DELAY = os.environ('UPDATE_DELAY', 300)
+if "UPDATE_DELAY" in os.environ:
+    update_delay = os.getenv('UPDATE_DELAY')
+else:
+    update_delay = 300
 
 
 class Stock:
@@ -37,7 +40,6 @@ class Stock:
             val = re.sub(',', '.', val)
             return float(val)
         except Exception:
-            print(f'Can\'t return value for {self}.{attr}')
             return -1.0
     
 
@@ -71,33 +73,31 @@ def stocks():
             yield stock
 
 
-def update_metrics():
-    for stock in stocks():
-        prom_current_price = Gauge(name='current_price', documentation='Current Price, USD', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_change_to_previous_close = Gauge(name='change_to_previous_close', documentation='Change to Previous Close, %', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_open = Gauge(name='open', documentation='Open, USD', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_low = Gauge(name='low', documentation='Low, USD', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_high = Gauge(name='high', documentation='High, USD', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_last = Gauge(name='last', documentation='Last, USD', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_change_to_previous_close_2 = Gauge(name='change_to_previous_close_2', documentation='Change to Previous Close 2, %', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_bid = Gauge(name='bid', documentation='Bid, USD', labelnames=('ticker'), labelvalues=stock.ticker)
-        prom_offer = Gauge(name='offer', documentation='Offer, USD', labelnames=('ticker'), labelvalues=stock.ticker)
-
-        prom_current_price.set(stock.float('current_price'))
-        prom_change_to_previous_close.set(stock.float('change_to_previous_close'))
-        prom_open.set(stock.float('open'))
-        prom_low.set(stock.float('low'))
-        prom_high.set(stock.float('high'))
-        prom_last.set(stock.float('last'))
-        prom_change_to_previous_close_2.set(stock.float('change_to_previous_close_2'))
-        prom_bid.set(stock.float('bid'))
-        prom_offer.set(stock.float('offer'))
-
-
 def main():
     start_http_server(8000)
-    update_metrics()
-    sleep(UPDATE_DELAY)
+
+    prom_current_price = Gauge(name='current_price', documentation='Current Price, USD', labelnames=['ticker'])
+    prom_change_to_previous_close = Gauge(name='change_to_previous_close', documentation='Change to Previous Close, %', labelnames=['ticker'])
+    prom_open = Gauge(name='open', documentation='Open, USD', labelnames=['ticker'])
+    prom_low = Gauge(name='low', documentation='Low, USD', labelnames=['ticker'])
+    prom_high = Gauge(name='high', documentation='High, USD', labelnames=['ticker'])
+    prom_last = Gauge(name='last', documentation='Last, USD', labelnames=['ticker'])
+    prom_change_to_previous_close_2 = Gauge(name='change_to_previous_close_2', documentation='Change to Previous Close 2, %', labelnames=['ticker'])
+    prom_bid = Gauge(name='bid', documentation='Bid, USD', labelnames=['ticker'])
+    prom_offer = Gauge(name='offer', documentation='Offer, USD', labelnames=['ticker'])
+
+    for stock in stocks():
+        prom_current_price.labels(ticker=stock.ticker).set(stock.float('current_price'))
+        prom_change_to_previous_close.labels(ticker=stock.ticker).set(stock.float('change_to_previous_close'))
+        prom_open.labels(ticker=stock.ticker).set(stock.float('open'))
+        prom_low.labels(ticker=stock.ticker).set(stock.float('low'))
+        prom_high.labels(ticker=stock.ticker).set(stock.float('high'))
+        prom_last.labels(ticker=stock.ticker).set(stock.float('last'))
+        prom_change_to_previous_close_2.labels(ticker=stock.ticker).set(stock.float('change_to_previous_close_2'))
+        prom_bid.labels(ticker=stock.ticker).set(stock.float('bid'))
+        prom_offer.labels(ticker=stock.ticker).set(stock.float('offer'))
+
+    sleep(update_delay)
 
 
 if __name__ == '__main__':
