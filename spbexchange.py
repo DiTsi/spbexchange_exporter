@@ -91,18 +91,18 @@ def main():
     prom_bid = Gauge(name='bid', documentation='Bid, USD', labelnames=['ticker'])
     prom_offer = Gauge(name='offer', documentation='Offer, USD', labelnames=['ticker'])
 
-    for stock in stocks():
-        prom_current_price.labels(ticker=stock.ticker).set(stock.float('current_price'))
-        prom_change_to_previous_close.labels(ticker=stock.ticker).set(stock.float('change_to_previous_close'))
-        prom_open.labels(ticker=stock.ticker).set(stock.float('open'))
-        prom_low.labels(ticker=stock.ticker).set(stock.float('low'))
-        prom_high.labels(ticker=stock.ticker).set(stock.float('high'))
-        prom_last.labels(ticker=stock.ticker).set(stock.float('last'))
-        prom_change_to_previous_close_2.labels(ticker=stock.ticker).set(stock.float('change_to_previous_close_2'))
-        prom_bid.labels(ticker=stock.ticker).set(stock.float('bid'))
-        prom_offer.labels(ticker=stock.ticker).set(stock.float('offer'))
-
-    sleep(update_delay)
+    while True:
+        for stock in stocks():
+            prom_current_price.labels(ticker=stock.ticker).set(stock.float('current_price'))
+            prom_change_to_previous_close.labels(ticker=stock.ticker).set(stock.float('change_to_previous_close'))
+            prom_open.labels(ticker=stock.ticker).set(stock.float('open'))
+            prom_low.labels(ticker=stock.ticker).set(stock.float('low'))
+            prom_high.labels(ticker=stock.ticker).set(stock.float('high'))
+            prom_last.labels(ticker=stock.ticker).set(stock.float('last'))
+            prom_change_to_previous_close_2.labels(ticker=stock.ticker).set(stock.float('change_to_previous_close_2'))
+            prom_bid.labels(ticker=stock.ticker).set(stock.float('bid'))
+            prom_offer.labels(ticker=stock.ticker).set(stock.float('offer'))
+        sleep(update_delay)
 
 
 if __name__ == '__main__':
