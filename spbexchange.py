@@ -10,9 +10,14 @@ from prometheus_client import start_http_server, Gauge
 url = 'http://spbexchange.com/en/market_data/'
 table_cols = 11
 if "UPDATE_DELAY" in os.environ:
-    update_delay = os.getenv('UPDATE_DELAY')
+    update_delay = int(os.getenv('UPDATE_DELAY'))
 else:
     update_delay = 300
+
+if "EXPORTER_PORT" in os.environ:
+    exporter_port = int(os.getenv('EXPORTER_PORT'))
+else:
+    exporter_port = 4512
 
 
 class Stock:
@@ -74,7 +79,7 @@ def stocks():
 
 
 def main():
-    start_http_server(8000)
+    start_http_server(exporter_port)
 
     prom_current_price = Gauge(name='current_price', documentation='Current Price, USD', labelnames=['ticker'])
     prom_change_to_previous_close = Gauge(name='change_to_previous_close', documentation='Change to Previous Close, %', labelnames=['ticker'])

@@ -1,0 +1,4 @@
+beautifulsoup4==4.9.3
+bs4==0.0.1
+prometheus-client==0.9.0
+soupsieve==2.2
