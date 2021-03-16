@@ -5,7 +5,7 @@ Another languages README: [English](https://github.com/DiTsi/spbexchange_exporte
 ## Docker
 
 ### Docker Hub 
-[link]()
+[link](https://hub.docker.com/r/ditsi/spbexchange_exporter)
 
 ### Run
 
@@ -19,4 +19,4 @@ To see metrics go to http://localhost:8000/
 ### Environment variables
 - UPDATE_DELAY - delay in seconds between data update
 - EXPORTER_PORT - exporter port. Default: 4512
-- ADDRESS - IP address where server listen. Default: 127.0.0.1
+- ADDRESS - IP address where server listen. Default: 0.0.0.0

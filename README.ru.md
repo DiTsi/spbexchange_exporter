@@ -5,7 +5,7 @@ README на других языках: [English](https://github.com/DiTsi/spbexc
 ## Docker
 
 ### Docker Hub 
-[ссылка]()
+[ссылка](https://hub.docker.com/r/ditsi/spbexchange_exporter)
 
 ### Запуск
 
@@ -19,4 +19,4 @@ docker run -d -p 8000:4512 ditsi/spbexchange_exporter:latest
 ### Переменные окружения
 - UPDATE_DELAY - задержка между обновлением данных (в секундах)
 - EXPORTER_PORT - порт exporter'а. По-умолчанию: 4512
-- ADDRESS - IP адрес, на котором слушает сервер. По-умолчанию: 127.0.0.1
+- ADDRESS - IP адрес, на котором слушает сервер. По-умолчанию: 0.0.0.0

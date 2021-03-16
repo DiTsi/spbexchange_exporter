@@ -20,9 +20,9 @@ else:
     exporter_port = 4512
 
 if "ADDRESS" in os.environ:
-    address = int(os.getenv('ADDRESS'))
+    address = os.getenv('ADDRESS')
 else:
-    address = '127.0.0.1'
+    address = '0.0.0.0'
 
 
 class Stock:
