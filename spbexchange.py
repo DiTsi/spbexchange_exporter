@@ -19,6 +19,11 @@ if "EXPORTER_PORT" in os.environ:
 else:
     exporter_port = 4512
 
+if "ADDRESS" in os.environ:
+    address = int(os.getenv('ADDRESS'))
+else:
+    address = '127.0.0.1'
+
 
 class Stock:
     def __init__(self, ticker, name='None', current_price='-', change_to_previous_close='-', open='-',
@@ -79,7 +84,7 @@ def stocks():
 
 
 def main():
-    start_http_server(exporter_port)
+    start_http_server(exporter_port, addr=address)
 
     prom_current_price = Gauge(name='current_price', documentation='Current Price, USD', labelnames=['ticker'])
     prom_change_to_previous_close = Gauge(name='change_to_previous_close', documentation='Change to Previous Close, %', labelnames=['ticker'])
